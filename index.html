@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oẳn Tù Xì - Trò Chơi Vui</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #FFE4E1 0%, #FFF0F5 50%, #FFF8F8 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(255, 182, 193, 0.3);
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #FFB6C1;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(255, 182, 193, 0.2);
+        }
+
+        .subtitle {
+            color: #FFB6C1;
+            font-size: 1rem;
+            margin-bottom: 30px;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #FFF0F5, #FFE4E1);
+            border-radius: 20px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-label {
+            color: #FFB6C1;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .score-value {
+            color: #FFB6C1;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .choices {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .choice-btn {
+            background: linear-gradient(135deg, #FFB6C1, #FFC0CB);
+            border: none;
+            border-radius: 20px;
+            padding: 25px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 182, 193, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 110px;
+        }
+
+        .choice-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255, 182, 193, 0.5);
+        }
+
+        .choice-btn:active {
+            transform: translateY(-2px);
+        }
+
+        .choice-icon {
+            font-size: 3rem;
+            margin-bottom: 8px;
+        }
+
+        .choice-text {
+            color: #FFFFFF;
+            font-weight: bold;
+            font-size: 0.95rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .result {
+            min-height: 150px;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #FFF0F5, #FFE4E1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .result-message {
+            color: #FFB6C1;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-detail {
+            color: #FFB6C1;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .choices-display {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .player-choice, .computer-choice {
+            text-align: center;
+        }
+
+        .choice-display-icon {
+            font-size: 3rem;
+            margin-bottom: 5px;
+        }
+
+        .choice-display-label {
+            color: #FFB6C1;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .vs {
+            color: #FFB6C1;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0) scale(1); }
+            25% { transform: translateX(-10px) scale(1.05); }
+            75% { transform: translateX(10px) scale(1.05); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes celebration {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg) scale(1.1); }
+            75% { transform: rotate(10deg) scale(1.1); }
+        }
+
+        .countdown {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #FFB6C1;
+            animation: pulse 0.6s ease-in-out;
+        }
+
+        .shake-animation {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .celebration-animation {
+            animation: celebration 0.5s ease-in-out;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 15px;
+                border-radius: 25px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+                margin-bottom: 15px;
+            }
+
+            .score-board {
+                padding: 15px;
+                margin-bottom: 25px;
+            }
+
+            .score-label {
+                font-size: 0.85rem;
+            }
+
+            .score-value {
+                font-size: 1.8rem;
+            }
+
+            .choices {
+                gap: 12px;
+                margin-bottom: 25px;
+            }
+
+            .choice-icon {
+                font-size: 2.8rem;
+                margin-bottom: 6px;
+            }
+
+            .choice-btn {
+                padding: 20px 8px;
+                min-height: 100px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .choice-text {
+                font-size: 0.9rem;
+                white-space: nowrap;
+            }
+
+            .result {
+                min-height: 140px;
+                padding: 18px;
+                margin-top: 15px;
+            }
+
+            .result-message {
+                font-size: 1.2rem;
+                margin-bottom: 12px;
+            }
+
+            .result-detail {
+                font-size: 0.95rem;
+            }
+
+            .choice-display-icon {
+                font-size: 2.5rem;
+            }
+
+            .choice-display-label {
+                font-size: 0.8rem;
+            }
+
+            .vs {
+                font-size: 1.2rem;
+            }
+
+            .countdown {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            .choice-icon {
+                font-size: 2.3rem;
+            }
+
+            .choice-btn {
+                padding: 18px 5px;
+                min-height: 90px;
+            }
+
+            .choice-text {
+                font-size: 0.85rem;
+            }
+
+            .score-value {
+                font-size: 1.6rem;
+            }
+
+            .countdown {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎀 Oẳn Tù Xì 🎀</h1>
+
+        <div class="score-board">
+            <div class="score-item">
+                <div class="score-label">Celine</div>
+                <div class="score-value" id="playerScore">0</div>
+            </div>
+            <div class="score-item">
+                <div class="score-label">Thắng</div>
+                <div class="score-value" id="computerScore">0</div>
+            </div>
+        </div>
+
+        <div class="choices">
+            <button class="choice-btn" onclick="play('kéo')">
+                <div class="choice-icon">✌️</div>
+                <div class="choice-text">Kéo</div>
+            </button>
+            <button class="choice-btn" onclick="play('búa')">
+                <div class="choice-icon">✊</div>
+                <div class="choice-text">Búa</div>
+            </button>
+            <button class="choice-btn" onclick="play('bao')">
+                <div class="choice-icon">✋</div>
+                <div class="choice-text">Bao</div>
+            </button>
+        </div>
+
+        <div class="result" id="result">
+            <p class="result-detail">Chọn một lựa chọn để bắt đầu chơi! 💕</p>
+        </div>
+    </div>
+
+    <script>
+        let playerScore = 0;
+        let computerScore = 0;
+
+        const choices = {
+            'kéo': '✌️',
+            'búa': '✊',
+            'bao': '✋'
+        };
+
+        // Logic để Thắng luôn thua
+        const losingChoice = {
+            'kéo': 'bao',    // Kéo thắng Bao
+            'búa': 'kéo',    // Búa thắng Kéo
+            'bao': 'búa'     // Bao thắng Búa
+        };
+
+        let isPlaying = false;
+
+        async function play(playerChoice) {
+            if (isPlaying) return;
+            isPlaying = true;
+
+            const resultDiv = document.getElementById('result');
+            const countdownWords = ['Kéo...', 'Búa...', 'Bao!'];
+            
+            // Animation đếm ngược
+            for (let i = 0; i < countdownWords.length; i++) {
+                resultDiv.innerHTML = `<div class="countdown">${countdownWords[i]}</div>`;
+                await sleep(600);
+            }
+
+            // Thắng chọn lựa chọn thua để người chơi thắng
+            const computerChoice = losingChoice[playerChoice];
+            
+            // Hiển thị shake animation
+            resultDiv.innerHTML = `
+                <div class="result-detail shake-animation">Đang so sánh... ✨</div>
+            `;
+            await sleep(500);
+
+            // Cập nhật điểm
+            playerScore++;
+            document.getElementById('playerScore').textContent = playerScore;
+            
+            // Hiển thị kết quả với animation
+            resultDiv.innerHTML = `
+                <div class="result-message celebration-animation">🎉 Celine thắng! 🎉</div>
+                <div class="choices-display" style="animation: slideUp 0.5s ease-out;">
+                    <div class="player-choice">
+                        <div class="choice-display-icon">${choices[playerChoice]}</div>
+                        <div class="choice-display-label">Celine chọn ${playerChoice}</div>
+                    </div>
+                    <div class="vs">VS</div>
+                    <div class="computer-choice">
+                        <div class="choice-display-icon">${choices[computerChoice]}</div>
+                        <div class="choice-display-label">Thắng chọn ${computerChoice}</div>
+                    </div>
+                </div>
+                <div class="result-detail" style="margin-top: 15px; animation: fadeIn 0.5s ease-out 0.3s both;">
+                    Thắng đã chọn ${computerChoice}! Celine giỏi quá! 💖
+                </div>
+            `;
+
+            isPlaying = false;
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>
